@@ -18,3 +18,5 @@ class Urls(db.Model):
     text = db.Column(db.Text)
 
     created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    clicked = db.Column(db.Integer, nullable=False, default=0)
