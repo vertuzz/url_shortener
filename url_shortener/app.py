@@ -1,5 +1,7 @@
 from flask import Flask
-from extensions import db
+from extensions import db, login_manager
+from models import User
+from admin import admin
 
 
 def create_app():
@@ -9,9 +11,7 @@ def create_app():
     # setting config
     app.config.from_pyfile('config.py')
 
-    # init extensions
-    db.init_app(app)
-    import models
+    init_extensions(app)
 
     # registering blueprints
     from frontend import frontend
@@ -21,3 +21,16 @@ def create_app():
     app.register_blueprint(api)
 
     return app
+
+
+def init_extensions(app):
+    db.init_app(app)
+    import models
+    login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.get(user_id)
+
+    admin.init_app(app)
+
