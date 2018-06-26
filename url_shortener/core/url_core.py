@@ -13,7 +13,7 @@ def generate_short_url(domain=None):
 
 def save_url(url, domain=None):
 
-    if 'http://' not in url or 'https://' not in url:
+    if 'http://' not in url and 'https://' not in url:
         url = 'http://' + url
 
     short_url = generate_short_url(domain=domain)
