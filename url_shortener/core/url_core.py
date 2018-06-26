@@ -7,12 +7,16 @@ from parse_core import get_info_from_url
 
 def generate_short_url(domain=None):
     domain = domain if domain else 'http://domain.com/'
+
+    # random short link
     rand = ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(8)])
+
     return domain + rand
 
 
 def save_url(url, domain=None):
 
+    # if no http or https in given url - we adding http://
     if 'http://' not in url and 'https://' not in url:
         url = 'http://' + url
 
@@ -21,6 +25,7 @@ def save_url(url, domain=None):
     db.session.add(r)
     db.session.commit()
 
+    # simple async url parsing (to not block short link generation)
     @copy_current_request_context
     def save_info_async(row_id, url):
         info = get_info_from_url(url)
@@ -34,9 +39,8 @@ def save_url(url, domain=None):
     return short_url
 
 
-
-
 def url_to_redirect(domain, short_url):
+    """Redirecting to full url with "clicked" increment"""
     res = Urls.query.filter_by(short_url=domain+short_url).first()
     if res is None:
         abort(404)

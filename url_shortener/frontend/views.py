@@ -11,5 +11,6 @@ def index():
 
 @frontend.route('/<short_url>')
 def url_redirect(short_url):
+    """Redirecting to stored url"""
     url = url_to_redirect(request.url_root , short_url)
     return redirect(url, code=302)
